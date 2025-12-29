@@ -181,7 +181,7 @@ class CleptoNinja(pyspiel.Game):
         max_hand_payoff = (
             max_poker_count * SET_PAYOFFS[4] + filling_pairs_count * SET_PAYOFFS[2]
         )
-        game_info = pyspiel.GameInfo(
+        self.game_info = pyspiel.GameInfo(
             num_distinct_actions=self._num_distinct_actions(),
             max_chance_outcomes=0,
             num_players=self._num_players,
@@ -190,7 +190,7 @@ class CleptoNinja(pyspiel.Game):
             utility_sum=0.0,  # unknown; general-sum
             max_game_length=self._game_length * self._num_players,
         )
-        super().__init__(GAME_TYPE, game_info, params)
+        super().__init__(GAME_TYPE, self.game_info, params)
 
     def new_initial_state(self):
         return CleptoNinjaState(self)
@@ -292,14 +292,6 @@ class CleptoNinjaState(pyspiel.State):
                 if current_auction.all_bids_received:
                     self._exchange_cards(current_auction)
                     self._history.append(ResolvedAuction.from_auction(current_auction))
-
-    def _action_to_string(self, player: int, action: int) -> str:
-        M = self.max_card
-        if action < M * M:
-            pub, priv = decode_offer(action, M)
-            return f"{player}: OFFER(pub={pub}, priv={priv})"
-        c1, c2 = decode_bid(action, M)
-        return f"{player}: BID({c1},{c2})"
 
     def is_terminal(self) -> bool:
         return len(self._auctions) == self._game.num_players() and all(

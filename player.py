@@ -1,6 +1,8 @@
 import random
 from abc import abstractmethod
 
+import pyspiel
+
 from cleptoninja import Phase, decode_bid, decode_offer, encode_bid, encode_offer
 
 
@@ -15,13 +17,17 @@ class Player:
         return type(self).__name__
 
     @abstractmethod
-    def action(self, state): ...
+    def action(self, state: pyspiel.State) -> int: ...
 
 
 class PolicyPlayer(Player):
     def __init__(self, player_id, policy):
         self.player_id = player_id
         self.policy = policy
+
+    @property
+    def name(self):
+        return super().name + f"(seat:{self.player_id})"
 
     def action(self, state):
         action_probs = self.policy.action_probabilities(state, self.player_id)
@@ -34,7 +40,12 @@ class RandomPlayer(Player):
         return random.choice(state.legal_actions(self.player_id))
 
 
-class LowestOfferHighestBidIfOfferInHandPlayer(Player):
+class GreedyPlayer(Player):
+    """
+    Offer: Lowest two cards
+    Bid: Highest two cards if public offer in hand, lowest two otherwise
+    """
+
     def action(self, state):
         legal_actions = state.legal_actions(self.player_id)
         action_decoder = {
