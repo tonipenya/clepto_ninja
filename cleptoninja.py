@@ -376,14 +376,18 @@ class CleptoNinjaState(pyspiel.State):
             header.append(f"round={self._round}/{self.game_length}")
         parts.append(" | ".join(header))
 
-        parts.append("Hands ---------------------")
+        parts.append("")
+        parts.append("-- Hands -----------------------------------")
         for hand_idx, hand in enumerate(self._hands):
-            if hand_idx != player and hide_private_information:
-                hand = ["*" for _ in hand]
-            parts.append(f"{hand_idx}: {sorted(hand)}")
+            hand_parts = (
+                [str(card) for card in sorted(hand)]
+                if hand_idx == player or not hide_private_information
+                else ["*"] * len(hand)
+            )
+            parts.append(f"{hand_idx}: {', '.join(hand_parts)}")
 
         parts.append("")
-        parts.append("Auctions ------------------")
+        parts.append("-- Auctions --------------------------------")
         for auction in self._auctions:
             offer_private = (
                 auction.offer_private

@@ -1,3 +1,4 @@
+import os
 import random
 from abc import abstractmethod
 
@@ -82,23 +83,34 @@ class GreedyPlayer(Player):
 
 class HumanInTheLoopPlayer(Player):
     def action(self, state, player_id):
-        print(f"You are player: {player_id}")
         print(
             state._string_representation(
                 player=player_id, hide_private_information=True
             )
         )
         prompt = {
-            Phase.OFFER: "Place Offer: ",
-            Phase.BID: "Place Bid: ",
+            Phase.OFFER: "Place offer: ",
+            Phase.BID: f"Place bid for auction {state._round}: ",
         }[state._phase]
-        print(prompt, end="", flush=True)
 
         action_encoder = {
             Phase.OFFER: encode_offer,
             Phase.BID: encode_bid,
         }[state._phase]
 
-        cards = input(prompt)
-        c1, c2 = [int(c) for c in cards.split(",")]
-        return action_encoder(c1, c2, state.max_card)
+        print()
+        print(f"You are player: {player_id}")
+        action = None
+        while action not in state._legal_actions():
+            try:
+                cards = input(prompt)
+                first_card, second_card = [int(c) for c in cards]
+                action = action_encoder(first_card, second_card, state.max_card)
+            except ValueError as e:
+                print("Invalid action!!!", e)
+
+        os.system("cls" if os.name == "nt" else "clear")
+
+        return action
+
+
