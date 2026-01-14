@@ -3,7 +3,13 @@ import copy
 import pyspiel
 
 from cleptoninja import register_game as register_cleptoninja_game
-from player import GreedyPlayer, HumanInTheLoopPlayer, Player, RandomPlayer
+from player import (
+    ActorCriticPlayer,
+    GreedyPlayer,
+    HumanInTheLoopPlayer,
+    Player,
+    RandomPlayer,
+)
 
 
 def run_game(players: list[Player]):
@@ -47,9 +53,9 @@ def print_scoreboard(scoreboard):
 if __name__ == "__main__":
     players = [
         RandomPlayer(),
-        GreedyPlayer(),
         HumanInTheLoopPlayer(),
         GreedyPlayer(),
+        ActorCriticPlayer.load("best_actor_critic_player.pt"),
     ]
 
     state = run_match(players)

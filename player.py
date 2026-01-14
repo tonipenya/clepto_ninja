@@ -1,10 +1,13 @@
 import os
 import random
 from abc import abstractmethod
+from pathlib import Path
 
 import pyspiel
+import torch
 
 from cleptoninja import Phase, decode_bid, decode_offer, encode_bid, encode_offer
+from model import ActorCriticModel, encode_observation, legal_action_mask, select_action
 
 
 class Player:
@@ -114,3 +117,41 @@ class HumanInTheLoopPlayer(Player):
         return action
 
 
+class ActorCriticPlayer(Player):
+    def __init__(self, model: ActorCriticModel, name_suffix=""):
+        self.model = model
+        self.name_suffix = name_suffix
+
+    @property
+    def name(self):
+        return f"{super().name}{self.name_suffix}"
+
+    def action(self, state, player_id):
+        observation = torch.tensor(
+            encode_observation(state, player_id), dtype=torch.float32, device="cpu"
+        )
+        mask = torch.tensor(
+            legal_action_mask(state, player_id), dtype=torch.bool, device="cpu"
+        )
+        action, *_ = select_action(self.model, observation, mask)
+        return action
+
+    def export(self, path: Path):
+        checkpoint = self.model.checkpoint
+        checkpoint["name_suffix"] = self.name_suffix
+
+        torch.save(checkpoint, path)
+
+    @classmethod
+    def load(cls, path: Path):
+        checkpoint = torch.load(path)
+
+        model = ActorCriticModel(
+            obs_dim=checkpoint["obs_dim"],
+            num_actions=checkpoint["num_actions"],
+            hidden=checkpoint["hidden"],
+        )
+        model.load_state_dict(checkpoint["state_dict"])
+        model.eval()
+
+        return cls(model, name_suffix=checkpoint["name_suffix"])
