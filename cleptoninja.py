@@ -1,3 +1,4 @@
+import random
 from collections import Counter
 from dataclasses import dataclass, field
 from enum import Enum, auto
@@ -218,11 +219,14 @@ class CleptoNinjaState(pyspiel.State):
         self._hands: list[list[int]] = [
             list(range(1, self.max_card + 1)) for _ in range(self._game.num_players())
         ]
+        self._draw_deck = random.sample(
+            list(range(1, self.max_card + 1)) * 2, k=self.max_card * 2
+        )
         self._auctions: list[Auction] = []
         self._history: list[ResolvedAuction] = []
 
     @property
-    def _round(self):
+    def _round(self) -> int:
         return min(
             len([auction for auction in self._auctions if auction.all_bids_received]),
             self._game.num_players() - 1,  # When all auctions have been resolved
@@ -358,7 +362,7 @@ class CleptoNinjaState(pyspiel.State):
         for bidder, cards in auction.bids:
             if bidder == winner:
                 continue
-            self._hands[bidder] += cards
+            self._hands[bidder] += [self._draw_deck.pop(), self._draw_deck.pop()]
 
     def _remove_from_hand(self, player: int, cards: list[int]) -> None:
         for card in cards:
