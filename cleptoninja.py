@@ -7,9 +7,8 @@ import pyspiel
 
 SET_PAYOFFS = {
     2: 1,
-    3: 7,
-    "full": 11,
-    # 4: 161,
+    3: 5,
+    "full": 10,
     4: 25,
 }
 

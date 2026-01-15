@@ -2,7 +2,8 @@ import os
 
 import pyspiel
 
-from cleptoninja import Phase, encode_bid, encode_offer, register_game as register_cleptoninja_game
+from cleptoninja import Phase, encode_bid, encode_offer
+from cleptoninja import register_game as register_cleptoninja_game
 from player import ActorCriticPlayer, GreedyPlayer, Player, RandomPlayer
 
 
