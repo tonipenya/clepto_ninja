@@ -11,6 +11,6 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 
 ADD *.py ${APP_DIR}
-ADD best_actor_critic_player.pt ${APP_DIR}
+ADD checkpoints/best_actor_critic_player.pt ${APP_DIR}
 
 CMD python play.py

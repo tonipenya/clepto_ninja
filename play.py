@@ -83,7 +83,7 @@ if __name__ == "__main__":
         RandomPlayer(),
         HumanInTheLoopPlayer(),
         GreedyPlayer(),
-        ActorCriticPlayer.load("best_actor_critic_player.pt"),
+        ActorCriticPlayer.load("checkpoints/best_actor_critic_player.pt"),
     ]
 
     state = run_match(players)
