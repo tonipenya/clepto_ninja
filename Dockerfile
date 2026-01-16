@@ -10,7 +10,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
     rm -rf /tmp/* /var/tmp/*
 
 
-ADD *.py ${APP_DIR}
-ADD checkpoints/best_actor_critic_player.pt ${APP_DIR}
+ADD *.py style.tcss ${APP_DIR}
+ADD checkpoints ${APP_DIR}/checkpoints
 
-CMD python play.py
+CMD textual run play.py

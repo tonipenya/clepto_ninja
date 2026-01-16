@@ -1,0 +1,134 @@
+$player0_accent: #6A0DAD; # purple
+$player1_accent: #1ABC9C; # teal
+$player2_accent: #C9A227; # golden
+$player3_accent: #E85D2F; # orange
+$active-auction_opacity: 100%
+$inactive-auction_opacity: 70%
+
+Screen {
+    layout: grid;
+    grid-size: 3;
+}
+
+PlayerView {
+    height: 100%;
+    background-tint: black 100%;
+}
+
+Card {
+    height: 3;
+    width: 3;
+    margin: 1;
+    align: center middle;
+}
+
+Scoreboard {
+    margin: 2;
+}
+
+.scoreboard-title {
+    text-style: bold;
+}
+
+Auction {
+    border-top:  solid lightgray !important;
+    border-title-color: lightgray;
+    margin: 0 1;
+    height: 1fr;
+    align: left middle;
+}
+
+#player-actions {
+    height: 1fr;
+}
+
+.active-auction {
+    border:  round black !important;
+    border-title-color: black;
+    background-tint: black 0% !important;
+}
+
+#player0 {
+    border: round $player0_accent;
+    background: $player0_accent;
+}
+
+#player1 {
+    border: round $player1_accent;
+    background: $player1_accent;
+}
+
+#player2 {
+    border: round $player2_accent;
+    background: $player2_accent;
+}
+
+#player3 {
+    border: round $player3_accent;
+    background: $player3_accent;
+}
+
+Card {
+    color: black;
+}
+
+Card.selected {
+    margin: 0 1 0 1;
+}
+
+.active-auction Card {
+    background: black !important;
+}
+
+Card.card-back {
+    hatch: cross black 100%;
+}
+
+#player0 Card {
+    background: $player0_accent;
+}
+
+#player1 Card {
+    background: $player1_accent;
+
+}
+
+#player2 Card {
+    background: $player2_accent;
+}
+
+#player3 Card {
+    background: $player3_accent;
+}
+
+#player0.active-auction Card {
+    color: $player0_accent;
+}
+
+#player1.active-auction Card {
+    color: $player1_accent;
+}
+
+#player2.active-auction Card {
+    color: $player2_accent;
+}
+
+#player3.active-auction Card {
+    color: $player3_accent;
+}
+
+#player0.active-auction Card.card-back{
+    hatch: cross $player0_accent;
+}
+
+#player1.active-auction Card.card-back{
+    hatch: cross $player1_accent;
+}
+
+#player2.active-auction Card.card-back{
+    hatch: cross $player2_accent;
+}
+
+#player3.active-auction Card.card-back{
+    hatch: cross $player3_accent;
+}
